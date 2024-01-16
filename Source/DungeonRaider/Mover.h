@@ -8,7 +8,7 @@
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class CRYPTRAIDER_API UMover : public UActorComponent
+class DUNGEONRAIDER_API UMover : public UActorComponent
 {
 	GENERATED_BODY()
 

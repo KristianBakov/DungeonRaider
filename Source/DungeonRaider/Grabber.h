@@ -40,4 +40,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float HoldDistance = 200;
+
+	bool GetGrabbableInReach(FHitResult& OutHitResult) const;
 };

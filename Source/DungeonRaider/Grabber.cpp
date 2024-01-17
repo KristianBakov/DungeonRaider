@@ -25,35 +25,45 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if(!GetPhysicsHandleComponent()) return;
+	if (!GetPhysicsHandleComponent()->GrabbedComponent) return;
 	FVector TargetLocation = GetComponentLocation() + GetForwardVector() * HoldDistance;
 	GetPhysicsHandleComponent()->SetTargetLocationAndRotation(TargetLocation, GetComponentRotation());
 }
 
 void UGrabber::Release()
 {
+	if(!GetPhysicsHandleComponent()) return;
 
+	if(GetPhysicsHandleComponent()->GrabbedComponent)
+	{
+		GetPhysicsHandleComponent()->ReleaseComponent();
+	}
 }
 
 void UGrabber::Grab()
 {
 	if(!GetPhysicsHandleComponent()) return;
 
+	FHitResult OutHitResult;
+	if (GetGrabbableInReach(OutHitResult))
+	{
+		UPrimitiveComponent* HitComponent = OutHitResult.GetComponent();
+		HitComponent->WakeAllRigidBodies();
+		GetPhysicsHandleComponent()->GrabComponentAtLocationWithRotation(HitComponent, NAME_None,
+			OutHitResult.ImpactPoint, GetComponentRotation());
+	}
+}
+
+bool UGrabber::GetGrabbableInReach(FHitResult& HitResult) const
+{
 	FVector Start = GetComponentLocation();
 	FVector End = Start + GetForwardVector() * MaxGrabDistance;
 	DrawDebugLine(GetWorld(), Start, End, FColor::Red);
 
-
 	FCollisionShape Sphere = FCollisionShape::MakeSphere(GrabRadius);
-	FHitResult HitResult;
 
-	bool HasHit = GetWorld()->SweepSingleByChannel(HitResult, Start, End,
+	return GetWorld()->SweepSingleByChannel(HitResult, Start, End,
 		FQuat::Identity, ECC_GameTraceChannel2, Sphere);
-
-	if (HasHit)
-	{
-		GetPhysicsHandleComponent()->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None,
-			HitResult.ImpactPoint, GetComponentRotation());
-	}
 }
 
 UPhysicsHandleComponent* UGrabber::GetPhysicsHandleComponent() const

@@ -34,5 +34,4 @@ private:
 		bool bFromSweep,
 		const FHitResult& SweepResult
 	);
-	void OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor);
 };

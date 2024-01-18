@@ -3,6 +3,7 @@
 
 #include "TeleporterTriggerComponent.h"
 #include <Kismet/GameplayStatics.h>
+#include "Teleporter.h"
 
 UTeleporterTriggerComponent::UTeleporterTriggerComponent()
 {
@@ -41,12 +42,15 @@ void UTeleporterTriggerComponent::OnOverlapBegin(UPrimitiveComponent* Overlapped
 {
 	if (OtherActor == ActorToTeleport)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Teleporting %s"), *OtherActor->GetName());
-	}
-}
 
-void UTeleporterTriggerComponent::OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
-{
+		//get owner as teleporter
+		ATeleporter* Owner = reinterpret_cast<ATeleporter*>(GetOwner());
+		if(Owner)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Teleporting %s"), *OtherActor->GetName());
+			Owner->TeleportActor(ActorToTeleport);
+		}
+	}
 }
 
 void UTeleporterTriggerComponent::SetTriggerActor(AActor* ActorIn)

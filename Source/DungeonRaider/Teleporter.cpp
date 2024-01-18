@@ -16,8 +16,12 @@ void ATeleporter::BeginPlay()
 }
 
 
-void ATeleporter::TeleportActor()
+void ATeleporter::TeleportActor(AActor* ActorToTeleport)
 {
+	if (!DestinationTeleporter) return;
+	ActorToTeleport->SetActorLocation(DestinationTeleporter->GetActorLocation() + TeleportOffset);
+	//log lovation
+UE_LOG(LogTemp, Warning, TEXT("Teleporting %s to %s"), *ActorToTeleport->GetName(), *DestinationTeleporter->GetActorLocation().ToString());
 }
 
 void ATeleporter::Tick(float DeltaTime)

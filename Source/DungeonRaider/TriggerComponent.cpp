@@ -11,8 +11,6 @@ UTriggerComponent::UTriggerComponent()
 void UTriggerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("TriggerComponent BeginPlay has been called"));
 }
 
 void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -22,10 +20,10 @@ void UTriggerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	AActor* UnlockableActor = GetUnlockableActor();
 	if (UnlockableActor)
 	{
-		UPrimitiveComponent* ThisRootComponent =  Cast<UPrimitiveComponent>(UnlockableActor->GetRootComponent());
-		if (ThisRootComponent)
+		UPrimitiveComponent* UnlockableActorRootComponent =  Cast<UPrimitiveComponent>(UnlockableActor->GetRootComponent());
+		if (UnlockableActorRootComponent)
 		{
-			ThisRootComponent->SetSimulatePhysics(false);
+			UnlockableActorRootComponent->SetSimulatePhysics(false);
 		}
 		UnlockableActor->AttachToComponent(this, FAttachmentTransformRules::KeepWorldTransform);
 		Mover->SetShouldMove(true);

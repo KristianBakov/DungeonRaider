@@ -27,8 +27,6 @@ private:
 
 	bool IsTeleporting = false;
 
-	AActor* ActorToTeleport = nullptr;
-
 	void TeleportActor();
-	void CheckActorToTeleportIsValid();
+
 };

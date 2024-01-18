@@ -39,10 +39,7 @@ void UTeleporterTriggerComponent::CheckActorToTeleportIsValid()
 
 void UTeleporterTriggerComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor == ActorToTeleport)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Teleporting %s"), *OtherActor->GetName());
-	}
+	UE_LOG(LogTemp, Warning, TEXT("Overlap begin"));
 }
 
 void UTeleporterTriggerComponent::OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor)

@@ -19,9 +19,11 @@ void ATeleporter::BeginPlay()
 void ATeleporter::TeleportActor(AActor* ActorToTeleport)
 {
 	if (!DestinationTeleporter) return;
-	ActorToTeleport->SetActorLocation(DestinationTeleporter->GetActorLocation() + TeleportOffset);
-	//log lovation
-UE_LOG(LogTemp, Warning, TEXT("Teleporting %s to %s"), *ActorToTeleport->GetName(), *DestinationTeleporter->GetActorLocation().ToString());
+	FVector Origin, Box;
+	ActorToTeleport->GetActorBounds(false, Origin, Box, false);
+	FVector TeleportOffset = Origin + TeleportOffsetConst;
+	UE_LOG(LogTemp, Warning, TEXT("Teleporting %s by %s"), *ActorToTeleport->GetName(), *TeleportOffset.ToString());
+	ActorToTeleport->SetActorLocation(DestinationTeleporter->GetActorLocation() + FVector(0,0, TeleportOffset.Z));
 }
 
 void ATeleporter::Tick(float DeltaTime)

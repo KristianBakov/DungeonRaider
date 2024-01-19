@@ -29,10 +29,10 @@ private:
 	UPROPERTY(EditAnywhere)
 	ATeleporter* DestinationTeleporter;
 
-	FVector TeleportOffset = FVector(0.0f, 0.0f, 100.0f);
+	const FVector TeleportOffsetConst = FVector(0.0f, 0.0f, 50.0f);
 
 	UPROPERTY(EditAnywhere)
-	float TeleportDelay = 1.0f;
+	float TeleportDelay = 3.0f;
 
 	bool IsTeleporting = false;
 

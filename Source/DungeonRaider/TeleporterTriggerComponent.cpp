@@ -34,7 +34,6 @@ void UTeleporterTriggerComponent::CheckActorToTeleportIsValid()
 		AActor* PlayerActor = reinterpret_cast<AActor*>(PlayerCharacter);
 		ActorToTeleport = PlayerActor;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Actor to teleport is %s"), *ActorToTeleport->GetName());
 }
 
 

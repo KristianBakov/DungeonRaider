@@ -23,6 +23,8 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	const float TELEPORT_DELAY = 3.0f;
+	float TeleportDelay = 0;
 	void CheckActorToTeleportIsValid();
 	AActor* ActorToTeleport = nullptr;
 	UFUNCTION()

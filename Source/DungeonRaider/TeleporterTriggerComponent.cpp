@@ -14,6 +14,14 @@ void UTeleporterTriggerComponent::TickComponent(float DeltaTime, ELevelTick Tick
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (TeleportDelay > 0.0f)
+	{
+		TeleportDelay -= DeltaTime;
+	}
+	else
+	{
+		TeleportDelay = 0.0f;
+	}
 }
 
 void UTeleporterTriggerComponent::BeginPlay()
@@ -39,12 +47,15 @@ void UTeleporterTriggerComponent::CheckActorToTeleportIsValid()
 
 void UTeleporterTriggerComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (TeleportDelay > 0.0f) return;
+
 	if (OtherActor == ActorToTeleport)
 	{
 		ATeleporter* Owner = reinterpret_cast<ATeleporter*>(GetOwner());
 		if(Owner)
 		{
 			Owner->TeleportActor(ActorToTeleport);
+			TeleportDelay = TELEPORT_DELAY;
 		}
 	}
 }

@@ -30,7 +30,6 @@ private:
 	ATeleporter* DestinationTeleporter;
 
 	const FVector TeleportOffsetConst = FVector(0.0f, 0.0f, 50.0f);
-	void CalculateTeleportOffset(AActor* ActorToTeleport, FVector& OutTeleportOffset);
 
 	UPROPERTY(EditAnywhere)
 	float TeleportDelay = 3.0f;

@@ -2,6 +2,8 @@
 
 
 #include "Teleporter.h"
+#include <Kismet/GameplayStatics.h>
+#include "Grabber.h"
 
 ATeleporter::ATeleporter()
 {
@@ -15,15 +17,36 @@ void ATeleporter::BeginPlay()
 
 }
 
+void ATeleporter::CalculateTeleportOffset(AActor* ActorToTeleport, FVector& OutTeleportOffset)
+{
+	FVector Origin, Box;
+	ActorToTeleport->GetActorBounds(false, Origin, Box, false);
+	OutTeleportOffset = Origin + TeleportOffsetConst;
+}
+
 
 void ATeleporter::TeleportActor(AActor* ActorToTeleport)
 {
 	if (!DestinationTeleporter) return;
-	FVector Origin, Box;
-	ActorToTeleport->GetActorBounds(false, Origin, Box, false);
-	FVector TeleportOffset = Origin + TeleportOffsetConst;
-	UE_LOG(LogTemp, Warning, TEXT("Teleporting %s by %s"), *ActorToTeleport->GetName(), *TeleportOffset.ToString());
+
+	FindAndReleaseGrabber();
+
+	FVector TeleportOffset;
+	CalculateTeleportOffset(ActorToTeleport, TeleportOffset);
 	ActorToTeleport->SetActorLocation(DestinationTeleporter->GetActorLocation() + FVector(0,0, TeleportOffset.Z));
+}
+
+void ATeleporter::FindAndReleaseGrabber()
+{
+	AActor* PlayerCharacter = reinterpret_cast<AActor*>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (PlayerCharacter)
+	{
+		UGrabber* Grabber = PlayerCharacter->FindComponentByClass<UGrabber>();
+		if (Grabber)
+		{
+			Grabber->Release();
+		}
+	}
 }
 
 void ATeleporter::Tick(float DeltaTime)

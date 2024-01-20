@@ -37,54 +37,39 @@ void ATeleporter::FindAndReleaseGrabber()
 	}
 }
 
-void ATeleporter::OnTeleportComplete()
-{
-	if (ActorToTelportRootComponent)
-	{
-		ActorToTelportRootComponent->SetSimulatePhysics(true);
-		IsTeleporting = false;
-	}
-}
-
-void ATeleporter::FreezeTeleportActorForDelay()
-{
-	ActorToTelportRootComponent->SetSimulatePhysics(false);
-	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ATeleporter::OnTeleportComplete, TeleportDelay, false);
-}
-
-
-bool ATeleporter::SetActorToTeleportRootComponent(AActor* ActorToTeleport)
-{
-	ActorToTelportRootComponent = Cast<UPrimitiveComponent>(ActorToTeleport->GetRootComponent());
-	if (!ActorToTelportRootComponent)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Actor to teleport has no root component"));
-		return false;
-	}
-	return true;
-}
 
 void ATeleporter::TeleportActor(AActor* ActorToTeleport)
 {
 	if (!DestinationTeleporter) return;
-	if (!SetActorToTeleportRootComponent(ActorToTeleport)) return;
+	ActorToTeleportRef = ActorToTeleport;
 
 	IsTeleporting = true;
 	FindAndReleaseGrabber();
 
-	//set location
 	FVector TeleportOffset;
 	CalculateTeleportOffset(ActorToTeleport, TeleportOffset);
 	ActorToTeleport->SetActorLocation(DestinationTeleporter->GetActorLocation() + FVector(0,0, TeleportOffset.Z));
-	UE_LOG(LogTemp, Warning, TEXT("Teleporting to %s"), *ActorToTeleport->GetActorLocation().ToString());
 
-	FreezeTeleportActorForDelay();
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]() {IsTeleporting = false; }, TeleportDelay, false);
 }
 
 void ATeleporter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (IsTeleporting)
+	{
+		UPrimitiveComponent* ActorToTelportRootComponent = Cast<UPrimitiveComponent>(ActorToTeleportRef->GetRootComponent());
+		if (ActorToTelportRootComponent)
+		{
+			ActorToTelportRootComponent->SetSimulatePhysics(false);
+		}
+		else
+		{
+			ActorToTelportRootComponent->SetSimulatePhysics(true);
+		}
+	}
 }
 
 

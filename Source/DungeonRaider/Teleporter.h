@@ -20,20 +20,23 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Teleporter")
 	void TeleportActor(AActor* ActorToTeleport);
-
 protected:
 	virtual void BeginPlay() override;
-
 private:	
 
 	UPROPERTY(EditAnywhere)
 	ATeleporter* DestinationTeleporter;
+	UPrimitiveComponent* ActorToTelportRootComponent;
 
 	const FVector TeleportOffsetConst = FVector(0.0f, 0.0f, 50.0f);
+	bool SetActorToTeleportRootComponent(AActor* ActorToTeleport);
 	void CalculateTeleportOffset(AActor* ActorToTeleport, FVector& OutTeleportOffset);
+	void FindAndReleaseGrabber();
+	void OnTeleportComplete();
+	void FreezeTeleportActorForDelay();
 
 	UPROPERTY(EditAnywhere)
-	float TeleportDelay = 3.0f;
+	float TeleportDelay = 1.0f;
 
 	bool IsTeleporting = false;
 

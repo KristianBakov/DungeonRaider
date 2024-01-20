@@ -14,7 +14,7 @@ ATeleporter::ATeleporter()
 void ATeleporter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	PlayerCharacter = reinterpret_cast<AActor*>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void ATeleporter::CalculateTeleportOffset(AActor* ActorToTeleport, FVector& OutTeleportOffset)
@@ -26,7 +26,6 @@ void ATeleporter::CalculateTeleportOffset(AActor* ActorToTeleport, FVector& OutT
 
 void ATeleporter::FindAndReleaseGrabber()
 {
-	AActor* PlayerCharacter = reinterpret_cast<AActor*>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (PlayerCharacter)
 	{
 		UGrabber* Grabber = PlayerCharacter->FindComponentByClass<UGrabber>();
@@ -77,8 +76,8 @@ void ATeleporter::TeleportActor(AActor* ActorToTeleport)
 	FVector TeleportOffset;
 	CalculateTeleportOffset(ActorToTeleport, TeleportOffset);
 	ActorToTeleport->SetActorLocation(DestinationTeleporter->GetActorLocation() + FVector(0,0, TeleportOffset.Z));
-	UE_LOG(LogTemp, Warning, TEXT("Teleporting to %s"), *ActorToTeleport->GetActorLocation().ToString());
 
+	if (ActorToTeleport == PlayerCharacter) return;
 	FreezeTeleportActorForDelay();
 }
 

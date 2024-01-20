@@ -41,9 +41,12 @@ void UTeleporterTriggerComponent::OnOverlapBegin(UPrimitiveComponent* Overlapped
 {
 	if (OtherActor == ActorToTeleport)
 	{
+
+		//get owner as teleporter
 		ATeleporter* Owner = reinterpret_cast<ATeleporter*>(GetOwner());
 		if(Owner)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Teleporting %s"), *OtherActor->GetName());
 			Owner->TeleportActor(ActorToTeleport);
 		}
 	}

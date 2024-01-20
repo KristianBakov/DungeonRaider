@@ -27,6 +27,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	ATeleporter* DestinationTeleporter;
 	UPrimitiveComponent* ActorToTelportRootComponent;
+	AActor* PlayerCharacter;
 
 	const FVector TeleportOffsetConst = FVector(0.0f, 0.0f, 50.0f);
 	bool SetActorToTeleportRootComponent(AActor* ActorToTeleport);
